@@ -1,7 +1,5 @@
-# set pallet
-palette = "catppuccin_latte"
-
-add_newline = false
+add_newline = true
+# A minimal left prompt
 format = """
 [](fg:mauve)\
 $os\
@@ -10,66 +8,48 @@ $directory\
 [](fg:red)\
 $character\
 """
-right_format = """
-[](fg:peach)\
-$git_branch\
-$git_status\
-[](bg:green fg:peach)\
-$c\
-$elixir\
-$elm\
-$golang\
-$gradle\
-$haskell\
-$java\
-$julia\
-$nodejs\
-$nim\
-$rust\
-$scala\
-$package\
-[](bg:sky fg:green)\
-$docker_context\
-[](bg:blue fg:sky)\
-$time\
-[ ](fg:blue)\
-"""
+palette = "catppuccin_latte"
+# move the rest of the prompt to the right
+right_format = """$all"""
 command_timeout = 1000
 
-# format = """
-# [](mauve)\
-# $os\
-# $username\
-# [](bg:red fg:mauve)\
-# $directory\
-# [](bg:peach fg:red)\
-# $git_branch\
-# $git_status\
-# [](bg:green fg:peach)\
-# $c\
-# $elixir\
-# $elm\
-# $golang\
-# $gradle\
-# $haskell\
-# $java\
-# $julia\
-# $nodejs\
-# $nim\
-# $rust\
-# $scala\
-# [](bg:sky fg:green)\
-# $docker_context\
-# [](bg:blue fg:sky)\
-# $time\
-# [ ](fg:blue)\
-# """
+[directory.substitutions]
+'~/tests/starship-custom' = 'work-project'
 
-# Disable the blank line at the start of the prompt
-# add_newline = false
+[git_branch]
+format =  '[$symbol$branch(:$remote_branch)]($style) '
 
-# You can also replace your username with a neat symbol like   or disable this
-# and use the os module below
+[aws]
+format = '[$symbol(profile: "$profile" )(\(region: $region\) )]($style)'
+disabled = false
+style = 'bold blue'
+symbol = " "
+
+[golang]
+format = '[ ($version) ](bold cyan)'
+
+[rust]
+symbol = ""
+format = '[ $symbol ($version) ](bold yellow)'
+
+[nodejs]
+symbol = ""
+format = '[ $symbol ($version) ](bold green)'
+
+[kubernetes]
+symbol = '☸ '
+disabled = false
+detect_files = ['Dockerfile']
+format = '[$symbol$context( \($namespace\))]($style) '
+contexts = [
+  { context_pattern = "arn:aws:eks:us-west-2:577926974532:cluster/zd-pvc-omer", style = "green", context_alias = "omerxx", symbol = " " },
+]
+
+[os]
+style = "bg:mauve"
+format = '[  ]($style)'
+disabled = false
+
 [username]
 show_always = true
 style_user = "bg:mauve"
@@ -77,116 +57,14 @@ style_root = "bg:mauve"
 format = '[$user󰽥 ]($style)'
 disabled = false
 
-
-# An alternative to the username module which displays a symbol that
-# represents the current operating system
-[os]
-style = "bg:mauve"
-format = '[  ]($style)'
-disabled = false # Disabled by default
-
 [directory]
 style = "bg:red"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
 
-# Here is how you can shorten some long paths by text replacement
-# similar to mapped_locations in Oh My Posh:
-[directory.substitutions]
-"Documents" = "󰈙 "
-"Downloads" = " "
-"Music" = " "
-"Pictures" = " "
-# Keep in mind that the order matters. For example:
-# "Important Documents" = " 󰈙 "
-# will not be replaced, because "Documents" was already substituted before.
-# So either put "Important Documents" before "Documents" or use the substituted version:
-# "Important 󰈙 " = " 󰈙 "
-
-[package]
-style = "bg:green"
-format = '[ $symbol$version]($style)'
-
-[c]
-symbol = " "
-style = "bg:green"
-format = '[ $symbol ($version) ]($style)'
-
 [docker_context]
-symbol = " "
-style = "bg:sky"
-format = '[ $symbol $context ]($style) $path'
-
-[elixir]
-symbol = " "
-style = "bg:green"
-format = '[ $symbol ($version) ]($style)'
-
-[elm]
-symbol = " "
-style = "bg:green"
-format = '[ $symbol ($version) ]($style)'
-
-[git_branch]
-symbol = ""
-style = "bg:peach"
-format = '[ $symbol $branch ]($style)'
-
-[git_status]
-style = "bg:peach"
-format = '[$all_status$ahead_behind ]($style)'
-
-[golang]
-symbol = " "
-style = "bg:green"
-format = '[ $symbol ]($style)'
-
-[gradle]
-style = "bg:green"
-format = '[ $symbol ($version) ]($style)'
-
-[haskell]
-symbol = " "
-style = "bg:green"
-format = '[ $symbol ($version) ]($style)'
-
-[java]
-symbol = " "
-style = "bg:green"
-format = '[ $symbol ($version) ]($style)'
-
-[julia]
-symbol = " "
-style = "bg:green"
-format = '[ $symbol ($version) ]($style)'
-
-[nodejs]
-symbol = ""
-style = "bg:green"
-format = '[ $symbol ($version) ]($style)'
-
-[nim]
-symbol = "󰆥 "
-style = "bg:green"
-format = '[ $symbol ($version) ]($style)'
-
-[rust]
-symbol = ""
-style = "bg:green"
-format = '[ $symbol ($version) ]($style)'
-
-[scala]
-symbol = " "
-style = "bg:green"
-format = '[ $symbol ($version) ]($style)'
-
-[time]
-disabled = false
-time_format = "%R" # Hour:Minute Format
-style = "bg:blue"
-format = '[ $time ]($style)'
-
+disabled = true
 
 [palettes.catppuccin_mocha]
 rosewater = "#f5e0dc"
@@ -243,4 +121,3 @@ surface0 = "#ccd0da"
 base = "#eff1f5"
 mantle = "#e6e9ef"
 crust = "#dce0e8"
-
