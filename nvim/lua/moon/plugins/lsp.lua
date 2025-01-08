@@ -10,7 +10,6 @@ return {
     "hrsh7th/nvim-cmp",
     "L3MON4D3/LuaSnip",
     "saadparwaiz1/cmp_luasnip",
-    "j-hui/fidget.nvim",
   },
 
   opts = {
@@ -25,10 +24,52 @@ return {
       {},
       vim.lsp.protocol.make_client_capabilities(),
       cmp_lsp.default_capabilities())
-
     local lspconfig = require('lspconfig')
+
+    -- Set up all LSP handlers to use notify
+    vim.lsp.handlers["window/showMessage"] = function(_, result, ctx)
+      local client = vim.lsp.get_client_by_id(ctx.client_id)
+      local lvl = ({ "error", "warn", "info", "hint" })[result.type]
+      vim.notify(result.message, lvl, {
+        title = "LSP | " .. (client and client.name or ""),
+        timeout = 5000,
+      })
+    end
+
+    -- Progress handler
+    vim.lsp.handlers["$/progress"] = function(_, result, ctx)
+      local client = vim.lsp.get_client_by_id(ctx.client_id)
+      local val = result.value
+
+      if not val.kind then
+        return
+      end
+
+      local message = val.message or ""
+      local percentage = val.percentage or 0
+      local title = val.title or ""
+
+      local msg = string.format("%s%s", title, message)
+
+      if val.kind == "begin" then
+        vim.notify(msg, "info", {
+          title = "LSP | " .. (client and client.name or ""),
+          timeout = 1000,
+        })
+      elseif val.kind == "report" and percentage then
+        vim.notify(msg, "info", {
+          title = string.format("LSP | %s (%d%%)", (client and client.name or ""), percentage),
+          replace = true,
+        })
+      elseif val.kind == "end" then
+        vim.notify(msg, "info", {
+          title = "LSP | " .. (client and client.name or ""),
+          timeout = 1000,
+        })
+      end
+    end
+
     lspconfig.sourcekit.setup {}
-    require("fidget").setup({})
     require("mason").setup()
     require("mason-lspconfig").setup({
       ensure_installed = {
