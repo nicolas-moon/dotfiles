@@ -58,7 +58,7 @@ config.keys = {
   },
   {
     key = 'w',
-    mods = 'CTRL',
+    mods = 'ALT',
     action = act.CloseCurrentPane { confirm = false },
   },
   {
