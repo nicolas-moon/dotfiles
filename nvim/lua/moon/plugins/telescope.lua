@@ -62,6 +62,13 @@ return {
 
     local builtin = require('telescope.builtin')
     vim.keymap.set('n', '<leader>pf', builtin.find_files, {})
+    vim.keymap.set('n', '<leader>pe', function()
+      require('telescope').extensions.file_browser.file_browser({
+        path = vim.fn.expand('%:p:h'),
+        cwd = vim.fn.expand('%:p:h'),
+        respect_gitignore = false,
+      })
+    end, { desc = 'File browser from current file directory' })
     vim.keymap.set('n', '<C-p>', builtin.git_files, {})
     vim.keymap.set('n', '<leader>pws', function()
       local word = vim.fn.expand("<cword>")
