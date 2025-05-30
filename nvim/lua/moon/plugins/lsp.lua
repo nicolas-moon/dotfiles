@@ -40,6 +40,8 @@ return {
     vim.lsp.handlers["$/progress"] = function(_, result, ctx)
       local client = vim.lsp.get_client_by_id(ctx.client_id)
       local val = result.value
+      local history = require("notify").history()
+      local notif_id = nil
 
       if not val.kind then
         return
@@ -48,23 +50,42 @@ return {
       local message = val.message or ""
       local percentage = val.percentage or 0
       local title = val.title or ""
+      if message == "" then
+        return
+      end
+      -- Find by message content or other criteria
 
-      local msg = string.format("%s%s", title, message)
 
       if val.kind == "begin" then
-        vim.notify(msg, "info", {
-          title = "LSP | " .. (client and client.name or ""),
+        vim.notify(message, "info", {
+          title = string.format("LSP | %s | %s", title, (client and client.name or "")),
           timeout = 1000,
+          replace = notif_id,
         })
       elseif val.kind == "report" and percentage then
-        vim.notify(msg, "info", {
-          title = string.format("LSP | %s (%d%%)", (client and client.name or ""), percentage),
-          replace = true,
+        local titl = string.format("LSP | %s", (client and client.name or ""))
+        for i = #history, 1, -1 do
+          local notif = history[i]
+          if notif.title[1] == titl then
+            notif_id = notif.id
+            break
+          end
+        end
+        if msg == "" then
+          msg = string.format("%d%%", percentage)
+        else
+          msg = string.format("%d%% | %s", percentage, msg)
+        end
+        vim.notify(message, "info", {
+          title = titl,
+          msg = string.format("%d%% | %s", percentage, msg),
+          replace = notif_id,
         })
       elseif val.kind == "end" then
-        vim.notify(msg, "info", {
-          title = "LSP | " .. (client and client.name or ""),
+        vim.notify(message, "info", {
+          title = string.format("LSP | %s | %s", title, (client and client.name or "")),
           timeout = 1000,
+          replace = notif_id,
         })
       end
     end
