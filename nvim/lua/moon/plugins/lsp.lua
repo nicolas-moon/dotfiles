@@ -99,7 +99,8 @@ return {
         "golangci_lint_ls",
         "rubocop",
         "vtsls",
-        "gopls"
+        "gopls",
+        "buf_ls"
       },
       handlers = {
         function(server_name) -- default handler (optional)
