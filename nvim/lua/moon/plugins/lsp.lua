@@ -60,7 +60,6 @@ return {
         vim.notify(message, "info", {
           title = string.format("LSP | %s | %s", title, (client and client.name or "")),
           timeout = 1000,
-          replace = notif_id,
         })
       elseif val.kind == "report" and percentage then
         local titl = string.format("LSP | %s", (client and client.name or ""))
@@ -76,16 +75,24 @@ return {
         else
           msg = string.format("%d%% | %s", percentage, msg)
         end
-        vim.notify(message, "info", {
-          title = titl,
-          msg = string.format("%d%% | %s", percentage, msg),
-          replace = notif_id,
-        })
+        if notif_id then
+          -- Update existing notification
+          vim.notify(message, "info", {
+            title = titl,
+            msg = string.format("%d%% | %s", percentage, msg),
+            replace = notif_id,
+          })
+        else
+          vim.notify(message, "info", {
+            title = titl,
+            msg = string.format("%d%% | %s", percentage, msg),
+            replace = notif_id,
+          })
+        end
       elseif val.kind == "end" then
         vim.notify(message, "info", {
           title = string.format("LSP | %s | %s", title, (client and client.name or "")),
           timeout = 1000,
-          replace = notif_id,
         })
       end
     end
