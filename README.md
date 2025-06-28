@@ -13,6 +13,7 @@ A modern development environment setup featuring Neovim, WezTerm, and Starship c
 - GitHub Copilot integration
 - Catppuccin color scheme
 - Auto-save after 5 minutes of inactivity
+- test 
 
 ### WezTerm Terminal
 - Catppuccin Mocha theme
