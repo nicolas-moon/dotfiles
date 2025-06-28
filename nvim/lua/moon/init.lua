@@ -9,12 +9,26 @@ local autocmd = vim.api.nvim_create_autocmd
 -- set a color column at 80
 vim.opt.colorcolumn = '120'
 
+-- set swap file location
+vim.opt.directory = "./.vim-swap//"
+
 autocmd('LspAttach', {
   group = moonGroup,
   callback = function(e)
     local opts = { buffer = e.buf }
     vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-    vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
+    vim.keymap.set("n", "K", function()
+      local hover_opts = {
+        -- border = "single", -- Adds a single line border around the hover box
+        -- Other options you might want:
+        -- border = "double",  -- Double line border
+        border = "rounded", -- Rounded corners with single line
+        -- border = "shadow",  -- Shadow effect
+        -- width = 60,         -- Set fixed width
+        -- height = 20,        -- Set fixed height
+      }
+      vim.lsp.buf.hover(hover_opts)
+    end, opts)
     vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
     vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
     vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)

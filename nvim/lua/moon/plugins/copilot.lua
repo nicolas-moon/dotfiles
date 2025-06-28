@@ -1,9 +1,25 @@
 return {
-    {
-        "github/copilot.vim",
-        config = function()
-            vim.g.copilot_no_tab_map = true
-            vim.api.nvim_set_keymap("i", "<C-J", 'copilot#Accept("<CR>")', { silent = true, expr = true })
-        end,
-    },
+  {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup({
+        suggestion = {
+          enabled = true,
+          auto_trigger = false,
+          hide_during_completion = false,
+          debounce = 25,
+          keymap = {
+            accept = false,
+            accept_word = false,
+            accept_line = "<Tab>",
+            next = false,
+            prev = false,
+            dismiss = false,
+          },
+        },
+      })
+    end,
+  },
 }
