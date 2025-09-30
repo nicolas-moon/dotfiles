@@ -24,7 +24,7 @@ return {
       {},
       vim.lsp.protocol.make_client_capabilities(),
       cmp_lsp.default_capabilities())
-    local lspconfig = require('lspconfig')
+    -- Using vim.lsp.config instead of deprecated require('lspconfig')
 
     -- Set up all LSP handlers to use notify
     vim.lsp.handlers["window/showMessage"] = function(_, result, ctx)
@@ -97,7 +97,7 @@ return {
       end
     end
 
-    lspconfig.sourcekit.setup {}
+    vim.lsp.config.sourcekit = {}
     require("mason").setup()
     require("mason-lspconfig").setup({
       ensure_installed = {
@@ -111,11 +111,11 @@ return {
       },
       handlers = {
         function(server_name) -- default handler (optional)
-          require("lspconfig")[server_name].setup {}
+          vim.lsp.config[server_name] = {}
         end,
 
         ["lua_ls"] = function()
-          lspconfig.lua_ls.setup {
+          vim.lsp.config.lua_ls = {
             capabilities = capabilities,
             settings = {
               Lua = {
@@ -128,7 +128,7 @@ return {
           }
         end,
         ["golangci_lint_ls"] = function()
-          lspconfig.golangci_lint_ls.setup {
+          vim.lsp.config.golangci_lint_ls = {
             capabilities = capabilities,
             settings = {
               golangci_lint_ls = {
